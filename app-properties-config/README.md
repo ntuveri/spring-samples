@@ -19,35 +19,35 @@ The app demonstrates Spring Boot features for external configuration
 
 C:\Users\nicola.tuveri\Sandbox\app-properties-config>java -jar .\build\libs\app-properties-config-0.0.1-SNAPSHOT.jar
 
-Application name is: Externally defined application name (config directory)
+Application name is: Externally defined application name (config directory)  
 Application default value is: Default application value
 
 C:\Users\nicola.tuveri\Sandbox\app-properties-config>java -jar .\build\libs\app-properties-config-0.0.1-SNAPSHOT.jar --spring.config.location=ext/application.properties
 
-Application name is: Externally defined application name (ext directory)
-Application default value is: null
+Application name is: Externally defined application name (ext directory)  
+Application default value is: null  
 
 C:\Users\nicola.tuveri\Sandbox\app-properties-config>java -jar .\build\libs\app-properties-config-0.0.1-SNAPSHOT.jar --spring.config.location=ext/
 
-Application name is: Externally defined application name (ext directory)
-Application default value is: null
+Application name is: Externally defined application name (ext directory)  
+Application default value is: null  
 
 C:\Users\nicola.tuveri\Sandbox\app-properties-config>java -jar .\build\libs\app-properties-config-0.0.1-SNAPSHOT.jar --spring.config.location=config/application.properties
 
-Application name is: Externally defined application name (config directory)
-Application default value is: null
+Application name is: Externally defined application name (config directory)  
+Application default value is: null    
 
 C:\Users\nicola.tuveri\Sandbox\app-properties-config>java -jar .\build\libs\app-properties-config-0.0.1-SNAPSHOT.jar --spring.config.additional-location=ext/application.properties
 
-Application name is: Externally defined application name (ext directory)
-Application default value is: Default application value
+Application name is: Externally defined application name (ext directory)  
+Application default value is: Default application value  
 
 C:\Users\nicola.tuveri\Sandbox\app-properties-config>java -jar .\build\libs\app-properties-config-0.0.1-SNAPSHOT.jar --spring.config.location=config/
 
-Application name is: Externally defined application name (config directory)
-Application default value is: null
+Application name is: Externally defined application name (config directory)  
+Application default value is: null    
 
 C:\Users\nicola.tuveri\Sandbox\app-properties-config>java -jar .\build\libs\app-properties-config-0.0.1-SNAPSHOT.jar --spring.profiles.active=test
 
-Application name is: Profile specific application name
-Application default value is: Default application value
+Application name is: Profile specific application name  
+Application default value is: Default application value  
