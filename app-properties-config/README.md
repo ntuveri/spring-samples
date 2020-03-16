@@ -2,19 +2,18 @@ The app demonstrates Spring Boot features for external configuration
 
 #### The project directory structure is 
 
-./ext/application.properties
-	Externally defined application name (ext directory)
+./ext/application.properties<br />
+	app.name=Externally defined application name (ext directory)
 	
-./config/application.properties
-	Externally defined application name (config directory)
+./config/application.properties<br />
+	app.name=Externally defined application name (config directory)
 	
-./src/main/resources/application.properties
-	app.name=Default application name
+./src/main/resources/application.properties<br />
+	app.name=Default application name<br />
 	app.default=Default application value
 
-./src/main/resources/application-test.properties
+./src/main/resources/application-test.properties<br />
 	app.name=Profile specific application name
-
 
 #### Below the output of running the app in command line
 
