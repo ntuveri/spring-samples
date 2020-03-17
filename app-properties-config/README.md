@@ -1,4 +1,5 @@
-The app demonstrates Spring Boot features for external configuration
+The app demonstrates Spring Boot features for external configuration.  
+See docs for details https://docs.spring.io/spring-boot/docs/current/reference/html/spring-boot-features.html#boot-features-external-config
 
 #### The project directory structure is 
 
