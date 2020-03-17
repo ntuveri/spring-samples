@@ -2,6 +2,7 @@ package com.example.apperrorhandling.models;
 
 import com.example.apperrorhandling.models.validators.LimousineCheck;
 import lombok.*;
+import org.springframework.validation.annotation.Validated;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
@@ -19,7 +20,7 @@ public class Car {
     private String model;
     private LocalDateTime productionDate;
     private BodyStyle bodyStyle;
-    @NotNull
+    @Valid
     private Engine engine;
 
     public Car(int id, @NotBlank String model, LocalDateTime productionDate, BodyStyle bodyStyle) {

@@ -93,17 +93,11 @@ public class CarServiceImpl implements CarService {
                     new Argument("productionDate", car.getProductionDate())
             };
 
-            results.reject("InvalidUnoProductionDate", arguments,
-                    String.format("The car model %s was only produced until %s", car.getModel(), unoEndProductionDate));
-
-
-            /*
             results.rejectValue("model", "InvalidUnoProductionDate", arguments,
                     String.format("The car model %s was only produced until %s", car.getModel(), unoEndProductionDate));
 
             results.rejectValue("productionDate", "InvalidUnoProductionDate", arguments,
                     String.format("The car model %s was only produced until %s", car.getModel(), unoEndProductionDate));
-             */
         }
 
         return results;

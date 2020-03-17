@@ -159,7 +159,7 @@ public class CarControllerTest {
     // 400 BAD_REQUEST
     // MethodArgumentNotValidException
     @Test
-    public void testMethodArgumentNotValidException_JSR303ConstraintValidator_Controller() {
+    public void testJavaBeanValidationAnnotationInController() {
         Engine engine = new Engine(-1, "Thermal");
         Car car = new Car(3, "VW Beatle", LocalDateTime.now(), BodyStyle.Limousine, engine);
 
@@ -173,7 +173,7 @@ public class CarControllerTest {
     // 500 INTERNAL_SERVER_ERROR
     // ConstraintViolationException
     @Test
-    public void testConstraintViolationException_JSR303ConstraintValidator_Service() {
+    public void testJavaBeanValidationAnnotationInService() {
 
         Engine engine = new Engine(1000, "Thermal");
         Car car = new Car(3, "VW Beatle", LocalDateTime.now(), BodyStyle.Limousine, engine);
@@ -187,7 +187,7 @@ public class CarControllerTest {
     // 400 BAD_REQUEST
     // MethodArgumentNotValidException
     @Test
-    public void testMethodArgumentNotValidException_SpringValidatorAnnotation_Controller() {
+    public void testSpringValidatorBinderInController() {
         Car car = new Car(3, "VW Tiguan", LocalDateTime.now(), BodyStyle.VAN);
 
         ResponseEntity<String> response = restTemplate.
@@ -198,7 +198,7 @@ public class CarControllerTest {
 
     // 200 OK
     @Test
-    public void testMethodArgumentNotValidException_SpringValidatorAnnotation_Service() {
+    public void testSpringValidatorBinderInService() {
         Car car = new Car(3, "VW Tiguan", LocalDateTime.now(), BodyStyle.VAN);
 
         ResponseEntity<String> response = restTemplate.
@@ -210,7 +210,7 @@ public class CarControllerTest {
     // 400 BAD_REQUEST
     // BindException
     @Test
-    public void testMethodArgumentNotValidException_SpringValidatorProgrammatic_Service() {
+    public void testSpringValidatorProgrammaticInService() {
         Car car = new Car(3, "Fiat Uno", LocalDateTime.now(), BodyStyle.SUV);
 
         ResponseEntity<String> response = restTemplate.
