@@ -10,6 +10,7 @@ import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.context.request.WebRequest;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -58,7 +59,9 @@ public class CustomErrorAttributes extends DefaultErrorAttributes {
 
 		List<CustomFieldError> customeFieldErrors = getCustomFieldErrors(errors);
 		errorAttributes.remove(ERRORS_KEY);
-		errorAttributes.put(ERRORS_KEY, customeFieldErrors);
+		if(customeFieldErrors != null && customeFieldErrors.size() > 0) {
+			errorAttributes.put(ERRORS_KEY, customeFieldErrors);
+		}
 
 		String code = getCode(webRequest, errors);
 		errorAttributes.put(CODE_KEY, code);
@@ -91,7 +94,6 @@ public class CustomErrorAttributes extends DefaultErrorAttributes {
 		if(errorsWithInvalidKeys == null) {
 			return null;
 		}
-
 		List<CustomFieldError> errors = new ArrayList<>(errorsWithInvalidKeys.size());
 		for (ObjectError oe: errorsWithInvalidKeys) {
 			if(oe instanceof FieldError) {
