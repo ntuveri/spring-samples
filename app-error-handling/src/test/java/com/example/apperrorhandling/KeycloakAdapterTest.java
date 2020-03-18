@@ -43,6 +43,21 @@ public class KeycloakAdapterTest {
         print(response);
     }
 
+    @Test
+    public void testInvalidToken() {
+        String expiredToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c";
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setBearerAuth(expiredToken);
+        HttpEntity<String> request = new HttpEntity<>(null, headers);
+
+        ResponseEntity<String> response = restTemplate.
+                exchange("/cars/auth", HttpMethod.GET, request, String.class);
+
+        print(response);
+
+    }
+
 
     private void print(ResponseEntity<String> response) {
         log.info("Response status code:\n{}", response.getStatusCode());

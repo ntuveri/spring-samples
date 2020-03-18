@@ -81,7 +81,7 @@ public class CustomErrorAttributes extends DefaultErrorAttributes {
 			code = "InvalidRequest";
 			return code;
 		}
-		// org.keycloak.adapters.spi.AuthenticationError
+
 		// otherwise the code is inferred from the exception type
 		code = t.getClass().getSimpleName();
 		if(code.endsWith("Exception")) {

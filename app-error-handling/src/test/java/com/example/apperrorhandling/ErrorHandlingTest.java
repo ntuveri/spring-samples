@@ -129,6 +129,25 @@ public class ErrorHandlingTest {
         print(response);
     }
 
+    // 404 NOT_FOUND
+    @Test
+    public void testCarNotFoundException() {
+        ResponseEntity<String> response = restTemplate.
+                exchange("/cars/99", HttpMethod.GET,null, String.class);
+
+        print(response);
+    }
+
+
+    // 404 NOT_FOUND
+    @Test
+    public void testCarDuplicatedIdException() {
+        ResponseEntity<String> response = restTemplate.
+                exchange("/cars/1", HttpMethod.GET,null, String.class);
+
+        print(response);
+    }
+
 
     // 400 BAD_REQUEST
     // HttpMessageNotReadableException

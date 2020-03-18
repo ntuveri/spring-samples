@@ -2,6 +2,8 @@ package com.example.apperrorhandling.services;
 
 import com.example.apperrorhandling.models.BodyStyle;
 import com.example.apperrorhandling.models.Car;
+import com.example.apperrorhandling.models.CarDuplicatedIdException;
+import com.example.apperrorhandling.models.CarNotFoundException;
 import com.example.apperrorhandling.models.validators.Argument;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
@@ -24,15 +26,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Slf4j
 @Service
 public class CarServiceImpl implements CarService {
 
-    private static List<Car> cars = new ArrayList<Car>() {{
-        new Car(1, "VW Golf", LocalDateTime.now().minusMonths(6), BodyStyle.Hatchback);
-        new Car(2, "VW Westfalia", LocalDateTime.now().minusYears(3), BodyStyle.VAN);
-    }};
+    private static List<Car> cars = Stream.of(
+        new Car(1, "VW Golf", LocalDateTime.now().minusMonths(6), BodyStyle.Hatchback),
+        new Car(2, "VW Westfalia", LocalDateTime.now().minusYears(3), BodyStyle.VAN),
+        new Car(1, "VW Golf", LocalDateTime.now().minusMonths(6), BodyStyle.Hatchback))
+            .collect(Collectors.toList());
 
     @Override
     public Iterable<Car> findAll() {
@@ -41,14 +45,21 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public Car findById(int id) {
-        List<Car> tmpCars = cars.stream().filter(c -> c.getId() == id).collect(Collectors.toList());
+        List<Car> tmpCars = cars.stream()
+                .filter(car -> car.getId() == id)
+                .collect(Collectors.toList());
 
-        if(tmpCars.size() == 1) {
-            return tmpCars.get(0);
+        if(tmpCars.size() == 0) {
+            String message = String.format("No car found corresponding to id %d", id);
+            throw new CarNotFoundException(message);
         }
 
-        // TODO: handle not found and multiple results
-        return null;
+        if(tmpCars.size() > 1) {
+            String message = String.format("Found duplicated cars corresponding to id %d", id);
+            throw new CarDuplicatedIdException(message);
+        }
+
+        return tmpCars.get(0);
     }
 
     @Override
