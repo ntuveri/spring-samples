@@ -19,7 +19,7 @@ public class CustomErrorAttributes extends DefaultErrorAttributes {
 
 	private static final String CODE_KEY = "code";
 	private static final String ERRORS_KEY = "errors";
-
+	private static final String KEYCLOAK_AUTH_ERROR_ATTRIBUTE = "org.keycloak.adapters.spi.AuthenticationError";
 
 	private class CustomFieldError {
 		private String field;
@@ -72,7 +72,7 @@ public class CustomErrorAttributes extends DefaultErrorAttributes {
 	private String getCode(WebRequest webRequest, List<ObjectError> errors) {
 		Throwable t = super.getError(webRequest);
 		if(t == null) {
-			// TODO: return internal server error
+			return getKeycloakAuthErrorCode(webRequest);
 		}
 
 		// in case of binding / validation errors the InvalidRequest code is assigned
@@ -81,7 +81,7 @@ public class CustomErrorAttributes extends DefaultErrorAttributes {
 			code = "InvalidRequest";
 			return code;
 		}
-
+		// org.keycloak.adapters.spi.AuthenticationError
 		// otherwise the code is inferred from the exception type
 		code = t.getClass().getSimpleName();
 		if(code.endsWith("Exception")) {
@@ -104,5 +104,13 @@ public class CustomErrorAttributes extends DefaultErrorAttributes {
 		}
 
 		return errors;
+	}
+
+	private String getKeycloakAuthErrorCode(WebRequest webRequest) {
+		// check auth errors handled by Keycloak adapter
+		Object authError = webRequest
+				.getAttribute(KEYCLOAK_AUTH_ERROR_ATTRIBUTE, WebRequest.SCOPE_REQUEST);
+
+		return authError != null ? "AuthError" : null;
 	}
 }

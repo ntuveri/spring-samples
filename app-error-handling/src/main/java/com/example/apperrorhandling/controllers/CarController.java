@@ -56,6 +56,11 @@ public class CarController {
         return carService.findAll();
     }
 
+    @GetMapping(value = "/auth", produces = MediaType.APPLICATION_JSON_VALUE)
+    public Iterable<Car> getCarsAuth() {
+        return carService.findAll();
+    }
+
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public Car getCar(@PathVariable(value = "id") int id) {
         return carService.findById(id);
