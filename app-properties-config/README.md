@@ -1,7 +1,7 @@
 The app demonstrates Spring Boot features for external configuration.  
 See docs for details https://docs.spring.io/spring-boot/docs/current/reference/html/spring-boot-features.html#boot-features-external-config
 
-#### Below the output of running the app with command line for some cases
+#### Below the output of running the app with command line in some cases
 
 1) By default content of the config directory is added to classpath. Inherits from main application.properties. Combines self, generic and specific levels.
 java -jar .\build\libs\app-properties-config-0.0.1-SNAPSHOT.jar
