@@ -139,7 +139,7 @@ public class ErrorHandlingTest {
     }
 
 
-    // 404 NOT_FOUND
+    // 500 INTERNAL_SERVER_ERROR
     @Test
     public void testCarDuplicatedIdException() {
         ResponseEntity<String> response = restTemplate.
