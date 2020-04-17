@@ -1,54 +1,71 @@
 The app demonstrates Spring Boot features for external configuration.  
 See docs for details https://docs.spring.io/spring-boot/docs/current/reference/html/spring-boot-features.html#boot-features-external-config
 
-#### The project directory structure is 
+#### Below the output of running the app with command line for some cases
 
-./ext/application.properties<br />
-	app.name=Externally defined application name (ext directory)
-	
-./config/application.properties<br />
-	app.name=Externally defined application name (config directory)
-	
-./src/main/resources/application.properties<br />
-	app.name=Default application name<br />
-	app.default=Default application value
+1) By default content of the config directory is added to classpath. Inherits from main application.properties. Combines self, generic and specific levels.
+java -jar .\build\libs\app-properties-config-0.0.1-SNAPSHOT.jar
 
-./src/main/resources/application-test.properties<br />
-	app.name=Profile specific application name
+app.name: Externally defined application name (config directory)
+app.default: Default application value
+app.composite-generic: Composite Generic with Specific application value (config directory)
+app.composite-specific: Composite Specific with Generic application value
+app.self-generic: Self Generic with Generic application value
+app.self-specific: Self Specific with Specific application value (config directory)
 
-#### Below the output of running the app in command line
 
-C:\Users\nicola.tuveri\Sandbox\app-properties-config>java -jar .\build\libs\app-properties-config-0.0.1-SNAPSHOT.jar
+2) Profile-specific settings win
+con spring.profiles.active=test
+java -jar .\build\libs\app-properties-config-0.0.1-SNAPSHOT.jar
+or 
+java -jar .\build\libs\app-properties-config-0.0.1-SNAPSHOT.jar --spring.profiles.active=test
 
-Application name is: Externally defined application name (config directory)  
-Application default value is: Default application value
+app.name: Profile specific application name
+app.default: Default application value
+app.composite-generic: Composite Generic with Specific application value (profile)
+app.composite-specific: Composite Specific with Generic application value
+app.self-generic: Self Generic with Generic application value
+app.self-specific: Self Specific with Specific application value (profile)
 
-C:\Users\nicola.tuveri\Sandbox\app-properties-config>java -jar .\build\libs\app-properties-config-0.0.1-SNAPSHOT.jar --spring.config.location=ext/application.properties
 
-Application name is: Externally defined application name (ext directory)  
-Application default value is: null  
+3) Only the file config/application.properties is considered
+java -jar .\build\libs\app-properties-config-0.0.1-SNAPSHOT.jar --spring.config.location=config/application.properties
 
-C:\Users\nicola.tuveri\Sandbox\app-properties-config>java -jar .\build\libs\app-properties-config-0.0.1-SNAPSHOT.jar --spring.config.location=ext/
+app.name: Externally defined application name (config directory)
+app.default: null
+app.composite-generic: null
+java.lang.IllegalArgumentException: Could not resolve placeholder 'app.generic' in value "Composite Specific with ${app.generic}"
 
-Application name is: Externally defined application name (ext directory)  
-Application default value is: null  
 
-C:\Users\nicola.tuveri\Sandbox\app-properties-config>java -jar .\build\libs\app-properties-config-0.0.1-SNAPSHOT.jar --spring.config.location=config/application.properties
+4) Only the content of the config/ directory is considered
+java -jar .\build\libs\app-properties-config-0.0.1-SNAPSHOT.jar --spring.config.location=config/
 
-Application name is: Externally defined application name (config directory)  
-Application default value is: null    
+app.name: Externally defined application name (config directory)
+app.default: null
+app.composite-generic: null
+java.lang.IllegalArgumentException: Could not resolve placeholder 'app.generic' in value "Composite Specific with ${app.generic}"
 
-C:\Users\nicola.tuveri\Sandbox\app-properties-config>java -jar .\build\libs\app-properties-config-0.0.1-SNAPSHOT.jar --spring.config.additional-location=ext/application.properties
 
-Application name is: Externally defined application name (ext directory)  
-Application default value is: Default application value  
+5) The file config/application.properties is considered. Inherits from main application.properties. Combines self, generic and specific levels.
+java -jar .\build\libs\app-properties-config-0.0.1-SNAPSHOT.jar --spring.config.additional-location=config/application.properties
 
-C:\Users\nicola.tuveri\Sandbox\app-properties-config>java -jar .\build\libs\app-properties-config-0.0.1-SNAPSHOT.jar --spring.config.location=config/
+app.name: Externally defined application name (config directory)
+app.default: Default application value
+app.composite-generic: Composite Generic with Specific application value (config directory)
+app.composite-specific: Composite Specific with Generic application value
+app.self-generic: Self Generic with Generic application value
+app.self-specific: Self Specific with Specific application value (config directory)
 
-Application name is: Externally defined application name (config directory)  
-Application default value is: null    
 
-C:\Users\nicola.tuveri\Sandbox\app-properties-config>java -jar .\build\libs\app-properties-config-0.0.1-SNAPSHOT.jar --spring.profiles.active=test
+6) Profile-specific settings win
+con spring.profiles.active=test
+java -jar .\build\libs\app-properties-config-0.0.1-SNAPSHOT.jar --spring.config.additional-location=config/application.properties 
+or 
+java -jar .\build\libs\app-properties-config-0.0.1-SNAPSHOT.jar --spring.config.additional-location=config/application.properties --spring.profiles.active=test
 
-Application name is: Profile specific application name  
-Application default value is: Default application value  
+app.name: Profile specific application name
+app.default: Default application value
+app.composite-generic: Composite Generic with Specific application value (profile)
+app.composite-specific: Composite Specific with Generic application value
+app.self-generic: Self Generic with Generic application value
+app.self-specific: Self Specific with Specific application value (profile)
