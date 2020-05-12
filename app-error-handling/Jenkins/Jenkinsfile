@@ -11,13 +11,14 @@ pipeline {
         INTEGRATION_REFERENCE_JOB_NAME = 'Virtual Drawer Domain/tpm-destination-medicalfacilities/develop'
         IGNORE_QUALITY_GATE = "${env.BRANCH_NAME != INTEGRATION_BRANCH}"
     }
+    
     tools {
         gradle 'gradle-6.3'
     }
 
     stages {
-        dir("${WORKSPACE_PATH}") {
-            stage('Testing') {
+        stage('Testing') {
+            dir("${WORKSPACE_PATH}") {
                 stages {
                     stage('Component Testing') {
                         when { equals expected: false, actual: params.contract_tests_only }
