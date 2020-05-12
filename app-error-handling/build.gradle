@@ -68,7 +68,7 @@ spotbugsMain {
         }
         xml {
             enabled = true
-            xml.destination = file("${buildDir}/reports/spotbugs/spotbugsMain.xml")
+            destination = file("${buildDir}/reports/spotbugs/spotbugsMain.xml")
         }
     }
 }
