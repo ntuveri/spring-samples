@@ -250,7 +250,7 @@ public class ErrorHandlingTest {
             log.info("Response body:\n{}", mapper.
                     writerWithDefaultPrettyPrinter().writeValueAsString(jsonResponse));
 
-        } catch (JsonProcessingException e) {
+        } catch (JsonProcessingException | IllegalArgumentException e) {
             log.error(e.getMessage(), e);
         }
     }
