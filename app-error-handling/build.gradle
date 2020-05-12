@@ -59,14 +59,17 @@ spotbugs {
     effort = "max"
     reportLevel = "low"
     ignoreFailures = true
-    toolVersion = "4.0.2"
 }
 
 spotbugsMain {
     reports {
-        html.enabled = false
-        xml.enabled = true
-        xml.destination = file("${buildDir}/reports/spotbugs/spotbugsMain.xml")
+        html {
+            enabled = false
+        }
+        xml {
+            enabled = true
+            xml.destination = file("${buildDir}/reports/spotbugs/spotbugsMain.xml")
+        }
     }
 }
 
