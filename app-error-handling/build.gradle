@@ -59,6 +59,7 @@ spotbugs {
     effort = "max"
     reportLevel = "low"
     ignoreFailures = true
+    toolVersion = "4.0.2"
 }
 
 spotbugsMain {
