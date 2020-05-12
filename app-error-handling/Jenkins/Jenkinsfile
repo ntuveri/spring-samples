@@ -11,55 +11,64 @@ pipeline {
         INTEGRATION_REFERENCE_JOB_NAME = 'Virtual Drawer Domain/tpm-destination-medicalfacilities/develop'
         IGNORE_QUALITY_GATE = "${env.BRANCH_NAME != INTEGRATION_BRANCH}"
     }
-    
     tools {
         gradle 'gradle-6.3'
     }
 
     stages {
+        stage('Common Steps') {
+            stages {
+                stage('Grade Clean') {
+                    steps {
+                        sh "gradle -b ./app-error-handling/build.gradle clean"
+                    }
+                }
+            }
+        }
+
         stage('Testing') {
-            dir("${WORKSPACE_PATH}") {
-                stages {
-                    stage('Component Testing') {
-                        when { equals expected: false, actual: params.contract_tests_only }
-                        stages {
-                            stage('Bugs Analysis - Spotbugs') {
-                                steps {
-                                    sh "gradle -b ./build.gradle spotbugsMain --info"
-                                }
-                            }
-                            stage('Duplicated Code Analysis - cpd') {
-                                steps {
-                                    sh "gradle -b ./build.gradle cpdCheck --info"
-                                }
-                            }
-                            stage('Static Code - pmd') {
-                                steps {
-                                    sh "gradle -b ./build.gradle pmdMain --info"
-                                }
-                            }
-                            stage('Style Analysis - CheckStyle') {
-                                steps {
-                                    sh "gradle -b ./build.gradle checkstyleMain --info"
-                                    sh "gradle -b ./build.gradle checkstyleTest --info"
-                                }
-                            }
-                            stage('Unit Test') {
-                                steps {
-                                    sh "gradle -b build.gradle unitTests --info"
-                                }
+            stages {
+                stage('Component Testing') {
+                    when { equals expected: false, actual: params.contract_tests_only }
+                    stages {
+                        stage('Bugs Analysis - Spotbugs') {
+                            steps {
+                                sh "gradle -b ./app-error-handling/build.gradle spotbugsMain --info"
                             }
                         }
-                    }
-
-                    stage('Code Coverage Analysis') {
-                        steps {
-                            sh "gradle -b ./build.gradle jacocoTestReport --info"
+                        stage('Duplicated Code Analysis - cpd') {
+                            steps {
+                                sh "gradle -b ./app-error-handling/build.gradle cpdCheck --info"
+                            }
+                        }
+                        stage('Static Code - pmd') {
+                            steps {
+                                sh "gradle -b ./app-error-handling/build.gradle pmdMain --info"
+                            }
+                        }
+                        stage('Style Analysis - CheckStyle') {
+                            steps {
+                                sh "gradle -b ./app-error-handling/build.gradle checkstyleMain --info"
+                                sh "gradle -b ./app-error-handling/build.gradle checkstyleTest --info"
+                            }
+                        }
+                        stage('Unit Test') {
+                            steps {
+                                sh "gradle -b ./app-error-handling/build.gradle unitTests --info"
+                            }
                         }
                     }
                 }
-                post {
-                    always {
+
+                stage('Code Coverage Analysis') {
+                    steps {
+                        sh "gradle -b ./app-error-handling/build.gradle jacocoTestReport --info"
+                    }
+                }
+            }
+            post {
+                always {
+                    dir("${WORKSPACE_PATH}") {
                         recordIssues(
                                 enabledForFailure: true,
                                 ignoreQualityGate: IGNORE_QUALITY_GATE,
