@@ -1,0 +1,108 @@
+pipeline {
+    agent any
+
+    parameters {
+        booleanParam(name: 'contract_tests_only', defaultValue: false, description: 'Only Contract Tests')
+    }
+
+    environment {
+        WORKSPACE_PATH = "${env.WORKSPACE}"
+        INTEGRATION_BRANCH = 'develop'
+        INTEGRATION_REFERENCE_JOB_NAME = 'Virtual Drawer Domain/tpm-destination-medicalfacilities/develop'
+        IGNORE_QUALITY_GATE = "${env.BRANCH_NAME != INTEGRATION_BRANCH}"
+    }
+    tools {
+        gradle 'gradle-6.3'
+    }
+    stages {
+        stage('Common Steps') {
+            stages {
+                stage('Grade Clean') {
+                    steps {
+                        sh "gradle -b build.gradle clean"
+                    }
+                }
+            }
+        }
+
+        stage('Testing') {
+            stages {
+                stage('Component Testing') {
+                    when { equals expected: false, actual: params.contract_tests_only }
+                    stages {
+                        stage('Bugs Analysis - Spotbugs') {
+                            steps {
+                                sh "gradle -b ./build.gradle spotbugsMain --info"
+                            }
+                        }
+                        stage('Duplicated Code Analysis - cpd') {
+                            steps {
+                                sh "gradle -b ./build.gradle cpdCheck --info"
+                            }
+                        }
+                        stage('Static Code - pmd') {
+                            steps {
+                                sh "gradle -b ./build.gradle pmdMain --info"
+                            }
+                        }
+                        stage('Style Analysis - CheckStyle') {
+                            steps {
+                                sh "gradle -b ./build.gradle checkstyleMain --info"
+                                sh "gradle -b ./build.gradle checkstyleTest --info"
+                            }
+                        }
+                        stage('Unit Test') {
+                            steps {
+                                sh "gradle -b build.gradle unitTests --info"
+                            }
+                        }
+                    }
+                }
+
+                stage('Code Coverage Analysis') {
+                    steps {
+                        sh "gradle -b ./build.gradle jacocoTestReport --info"
+                    }
+                }
+            }
+            post {
+                always {
+                    dir("${WORKSPACE_PATH}") {
+                        recordIssues(
+                                enabledForFailure: true,
+                                ignoreQualityGate: IGNORE_QUALITY_GATE,
+                                referenceJobName: INTEGRATION_REFERENCE_JOB_NAME,
+                                tool: pmdParser(pattern: 'build/reports/pmd/pmd.xml'),
+                                unstableNewAll: 1)
+                        recordIssues(
+                                enabledForFailure: true,
+                                ignoreQualityGate: IGNORE_QUALITY_GATE,
+                                referenceJobName: INTEGRATION_REFERENCE_JOB_NAME,
+                                tool: spotBugs(pattern: 'build/reports/spotbugs/spotbugsMain.xml'),
+                                unstableNewAll: 1);
+                        recordIssues(
+                                enabledForFailure: true,
+                                ignoreQualityGate: IGNORE_QUALITY_GATE,
+                                referenceJobName: INTEGRATION_REFERENCE_JOB_NAME,
+                                tool: cpd(pattern: 'build/reports/cpd/cpd.xml'),
+                                unstableNewAll: 1);
+                        recordIssues(
+                                enabledForFailure: true,
+                                ignoreQualityGate: IGNORE_QUALITY_GATE,
+                                referenceJobName: INTEGRATION_REFERENCE_JOB_NAME,
+                                tool: checkStyle(pattern: 'build/reports/checkstyle/checkstyle*.xml'),
+                                unstableNewAll: 1);
+                        jacoco(
+                                execPattern: 'build/jacoco/*Tests.exec',
+                                classPattern: 'build/classes/',
+                                exclusionPattern: './**/test/',
+                                sourcePattern: 'src/main/'
+                        )
+                        archive 'build/jacoco/**/*.xml'
+                        junit 'build/test-results/**/*.xml'
+                    }
+                }
+            }
+        }
+    }
+}
