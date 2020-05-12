@@ -17,17 +17,6 @@ pipeline {
 
     stages {
         dir("${WORKSPACE_PATH}") {
-
-                stage('Common Steps') {
-                stages {
-                    stage('Grade Clean') {
-                        steps {
-                            sh "gradle -b build.gradle clean"
-                        }
-                    }
-                }
-            }
-
             stage('Testing') {
                 stages {
                     stage('Component Testing') {
