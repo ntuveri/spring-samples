@@ -2,6 +2,11 @@ plugins {
 	id 'org.springframework.boot' version '2.2.5.RELEASE'
 	id 'io.spring.dependency-management' version '1.0.9.RELEASE'
 	id 'java'
+    id "com.github.spotbugs" version "4.0.8"
+    id 'checkstyle'
+    id 'pmd'
+    id 'jacoco'
+    id "de.aaschmid.cpd" version "3.1"
 }
 
 group = 'com.example'
@@ -16,6 +21,99 @@ configurations {
 
 repositories {
 	mavenCentral()
+}
+
+cpdCheck {
+    ignoreFailures true
+    reports {
+        xml.enabled = true
+        xml.destination file("${buildDir}/reports/cpd/cpd.xml")
+    }
+    source = sourceSets.main.allJava
+}
+
+pmd {
+    ruleSetFiles = files("config/pmd/ruleset.xml")
+    ignoreFailures = true
+    sourceSets = [sourceSets.main]
+    rulePriority(2)
+}
+
+pmdMain {
+    reports {
+        xml.enabled true
+        html.enabled false
+        xml.destination file("${buildDir}/reports/pmd/pmd.xml")
+    }
+}
+
+pmdTest {
+    reports {
+        xml.enabled true
+        html.enabled false
+        xml.destination file("${buildDir}/reports/pmd/pmdTest.xml")
+    }
+}
+
+spotbugs {
+    effort = "max"
+    reportLevel = "low"
+    ignoreFailures = true
+}
+
+spotbugsMain {
+    reports {
+        html.enabled = false
+        xml.enabled = true
+        xml.destination = file("${buildDir}/reports/spotbugs/spotbugsMain.xml")
+    }
+}
+
+spotbugsTest {
+    reports {
+        html.enabled = false
+        xml.enabled = true
+        xml.destination = file("${buildDir}/reports/spotbugs/spotbugsTest.xml")
+    }
+}
+
+checkstyle {
+    toolVersion '8.30'
+    ignoreFailures true
+    configFile file("${rootDir}/config/checkstyle/checkstyle.xml")
+}
+
+checkstyleMain {
+    source = 'src/main/java'
+    reports {
+        html.enabled true
+        html.destination file("${buildDir}/reports/checkstyle/checkstyleMain.html")
+        xml.enabled true
+        xml.destination file("${buildDir}/reports/checkstyle/checkstyleMain.xml")
+    }
+}
+
+checkstyleTest {
+    source = 'src/test/java'
+    reports {
+        html.enabled true
+        html.destination file("${buildDir}/reports/checkstyle/checkstyleTest.html")
+        xml.enabled true
+        xml.destination file("${buildDir}/reports/checkstyle/checkstyleTest.xml")
+    }
+}
+
+jacoco {
+    toolVersion = "0.8.1"
+    reportsDir = file("$buildDir/customJacocoReportDir")
+}
+
+jacocoTestReport {
+    reports {
+        xml.enabled false
+        csv.enabled false
+        html.destination file("${buildDir}/jacocoHtml")
+    }
 }
 
 ext {
