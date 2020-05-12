@@ -54,7 +54,7 @@ pipeline {
                         }
                         stage('Unit Test') {
                             steps {
-                                sh "gradle -b ./app-error-handling/build.gradle unitTests --info"
+                                sh "gradle -b ./app-error-handling/build.gradle test --info"
                             }
                         }
                     }
