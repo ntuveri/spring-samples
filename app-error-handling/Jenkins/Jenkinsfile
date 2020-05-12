@@ -7,8 +7,8 @@ pipeline {
 
     environment {
         WORKSPACE_PATH = "${env.WORKSPACE}/app-error-handling"
-        INTEGRATION_BRANCH = 'develop'
-        INTEGRATION_REFERENCE_JOB_NAME = 'Virtual Drawer Domain/tpm-destination-medicalfacilities/develop'
+        INTEGRATION_BRANCH = 'jenkins-code-warnings'
+        INTEGRATION_REFERENCE_JOB_NAME = 'pipeline-multibranch-1/jenkins-code-warnings'
         IGNORE_QUALITY_GATE = "${env.BRANCH_NAME != INTEGRATION_BRANCH}"
     }
     tools {
