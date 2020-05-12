@@ -15,9 +15,10 @@ pipeline {
         gradle 'gradle-6.3'
     }
 
-    dir("${WORKSPACE_PATH}") {
-        stages {
-            stage('Common Steps') {
+    stages {
+        dir("${WORKSPACE_PATH}") {
+
+                stage('Common Steps') {
                 stages {
                     stage('Grade Clean') {
                         steps {
