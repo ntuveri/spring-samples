@@ -78,7 +78,7 @@ pipeline {
 
                                 def refBuild = selectRun job: INTEGRATION_REFERENCE_JOB_NAME,
                                         selector: permalink('lastSuccessfulBuild'),
-                                        filter: parameters('contract_tests_only=false')
+                                        filter: parameters('contract_tests_only=false'), verbose: true
                                 def refBuildId = refBuild.getId()
 
                                 recordIssues(
