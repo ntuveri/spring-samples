@@ -69,29 +69,39 @@ pipeline {
             post {
                 always {
                     dir("${WORKSPACE_PATH}") {
+                        when { equals expected: false, actual: params.contract_tests_only }
+                        /*
+                        def refBuild = selectRun job: INTEGRATION_REFERENCE_JOB_NAME,
+                                selector: permalink('lastSuccessfulBuild'),
+                                parameters: contract_tests_only(false)
+                        */
                         recordIssues(
                                 enabledForFailure: true,
                                 ignoreQualityGate: IGNORE_QUALITY_GATE,
                                 referenceJobName: INTEGRATION_REFERENCE_JOB_NAME,
                                 tool: pmdParser(pattern: 'build/reports/pmd/pmd.xml'),
+                                // referenceBuildId: refBuild.getId(),
                                 unstableNewAll: 1)
                         recordIssues(
                                 enabledForFailure: true,
                                 ignoreQualityGate: IGNORE_QUALITY_GATE,
                                 referenceJobName: INTEGRATION_REFERENCE_JOB_NAME,
                                 tool: spotBugs(pattern: 'build/reports/spotbugs/spotbugsMain.xml'),
+                                // referenceBuildId: refBuild.getId(),
                                 unstableNewAll: 1);
                         recordIssues(
                                 enabledForFailure: true,
                                 ignoreQualityGate: IGNORE_QUALITY_GATE,
                                 referenceJobName: INTEGRATION_REFERENCE_JOB_NAME,
                                 tool: cpd(pattern: 'build/reports/cpd/cpd.xml'),
+                                // referenceBuildId: refBuild.getId(),
                                 unstableNewAll: 1);
                         recordIssues(
                                 enabledForFailure: true,
                                 ignoreQualityGate: IGNORE_QUALITY_GATE,
                                 referenceJobName: INTEGRATION_REFERENCE_JOB_NAME,
                                 tool: checkStyle(pattern: 'build/reports/checkstyle/checkstyle*.xml'),
+                                // referenceBuildId: refBuild.getId(),
                                 unstableNewAll: 1);
                         jacoco(
                                 execPattern: 'build/jacoco/*Tests.exec',
