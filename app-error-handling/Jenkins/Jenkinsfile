@@ -3,6 +3,7 @@ pipeline {
 
     parameters {
         booleanParam(name: 'contract_tests_only', defaultValue: false, description: 'Only Contract Tests')
+        booleanParam(name: 'record_issues', defaultValue: true, description: 'Record issues')
         choice(name: 'build_status', choices: ['DEFAULT', 'SUCCESS', 'UNSTABLE', 'FAILURE'],
                 description: 'Force build status')
     }
@@ -72,7 +73,7 @@ pipeline {
                 always {
                     dir("${WORKSPACE_PATH}") {
                         script {
-                            // if (!params.contract_tests_only) {
+                            if (!params.record_issues) {
                                 echo 'Record code style and quality issues'
                                 /*
                                 def refBuild = selectRun job: INTEGRATION_REFERENCE_JOB_NAME,
@@ -115,7 +116,7 @@ pipeline {
                                 )
                                 archive 'build/jacoco/**/*.xml'
                                 junit 'build/test-results/**/*.xml'
-                            // }
+                            }
 
                             if (params.build_status != 'DEFAULT') {
                                 currentBuild.result = params.build_status
