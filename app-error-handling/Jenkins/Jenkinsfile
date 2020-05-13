@@ -73,7 +73,7 @@ pipeline {
                 always {
                     dir("${WORKSPACE_PATH}") {
                         script {
-                            if (!params.record_issues) {
+                            if (params.record_issues) {
                                 echo 'Record code style and quality issues'
 
                                 def refBuild = selectRun job: INTEGRATION_REFERENCE_JOB_NAME,
