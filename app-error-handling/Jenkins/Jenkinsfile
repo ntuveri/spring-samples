@@ -3,6 +3,9 @@ pipeline {
 
     parameters {
         booleanParam(name: 'contract_tests_only', defaultValue: false, description: 'Only Contract Tests')
+        booleanParam(name: 'record_issues', defaultValue: true, description: 'Record issues')
+        choice(name: 'build_status', choices: ['DEFAULT', 'SUCCESS', 'UNSTABLE', 'FAILURE'],
+                description: 'Force build status')
     }
 
     environment {
@@ -69,42 +72,57 @@ pipeline {
             post {
                 always {
                     dir("${WORKSPACE_PATH}") {
-                        recordIssues(
-                                enabledForFailure: true,
-                                ignoreQualityGate: IGNORE_QUALITY_GATE,
-                                referenceJobName: INTEGRATION_REFERENCE_JOB_NAME,
-                                tool: pmdParser(pattern: 'build/reports/pmd/pmd.xml'),
-                                referenceBuildId: "24",
-                                unstableNewAll: 1)
-                        recordIssues(
-                                enabledForFailure: true,
-                                ignoreQualityGate: IGNORE_QUALITY_GATE,
-                                referenceJobName: INTEGRATION_REFERENCE_JOB_NAME,
-                                tool: spotBugs(pattern: 'build/reports/spotbugs/spotbugsMain.xml'),
-                                referenceBuildId: "24",
-                                unstableNewAll: 1);
-                        recordIssues(
-                                enabledForFailure: true,
-                                ignoreQualityGate: IGNORE_QUALITY_GATE,
-                                referenceJobName: INTEGRATION_REFERENCE_JOB_NAME,
-                                tool: cpd(pattern: 'build/reports/cpd/cpd.xml'),
-                                referenceBuildId: "24",
-                                unstableNewAll: 1);
-                        recordIssues(
-                                enabledForFailure: true,
-                                ignoreQualityGate: IGNORE_QUALITY_GATE,
-                                referenceJobName: INTEGRATION_REFERENCE_JOB_NAME,
-                                tool: checkStyle(pattern: 'build/reports/checkstyle/checkstyle*.xml'),
-                                referenceBuildId: "24",
-                                unstableNewAll: 1);
-                        jacoco(
-                                execPattern: 'build/jacoco/*Tests.exec',
-                                classPattern: 'build/classes/',
-                                exclusionPattern: './**/test/',
-                                sourcePattern: 'src/main/'
-                        )
-                        archive 'build/jacoco/**/*.xml'
-                        junit 'build/test-results/**/*.xml'
+                        script {
+                            if (!params.record_issues) {
+                                echo 'Record code style and quality issues'
+
+                                def refBuild = selectRun job: INTEGRATION_REFERENCE_JOB_NAME,
+                                        selector: permalink('lastSuccessfulBuild'),
+                                        filter: parameters('contract_tests_only=false')
+                                def refBuildId = refBuild.getId()
+
+                                recordIssues(
+                                        enabledForFailure: true,
+                                        ignoreQualityGate: IGNORE_QUALITY_GATE,
+                                        referenceJobName: INTEGRATION_REFERENCE_JOB_NAME,
+                                        tool: pmdParser(pattern: 'build/reports/pmd/pmd.xml'),
+                                        referenceBuildId: refBuildId,
+                                        unstableNewAll: 1)
+                                recordIssues(
+                                        enabledForFailure: true,
+                                        ignoreQualityGate: IGNORE_QUALITY_GATE,
+                                        referenceJobName: INTEGRATION_REFERENCE_JOB_NAME,
+                                        tool: spotBugs(pattern: 'build/reports/spotbugs/spotbugsMain.xml'),
+                                        referenceBuildId: refBuildId,
+                                        unstableNewAll: 1);
+                                recordIssues(
+                                        enabledForFailure: true,
+                                        ignoreQualityGate: IGNORE_QUALITY_GATE,
+                                        referenceJobName: INTEGRATION_REFERENCE_JOB_NAME,
+                                        tool: cpd(pattern: 'build/reports/cpd/cpd.xml'),
+                                        referenceBuildId: refBuildId,
+                                        unstableNewAll: 1);
+                                recordIssues(
+                                        enabledForFailure: true,
+                                        ignoreQualityGate: IGNORE_QUALITY_GATE,
+                                        referenceJobName: INTEGRATION_REFERENCE_JOB_NAME,
+                                        tool: checkStyle(pattern: 'build/reports/checkstyle/checkstyle*.xml'),
+                                        referenceBuildId: refBuildId,
+                                        unstableNewAll: 1);
+                                jacoco(
+                                        execPattern: 'build/jacoco/*.exec',
+                                        classPattern: 'build/classes/',
+                                        exclusionPattern: './**/test/',
+                                        sourcePattern: 'src/main/'
+                                )
+                                archive 'build/jacoco/**/*.xml'
+                                junit 'build/test-results/**/*.xml'
+                            }
+
+                            if (params.build_status != 'DEFAULT') {
+                                currentBuild.result = params.build_status
+                            }
+                        }
                     }
                 }
             }
