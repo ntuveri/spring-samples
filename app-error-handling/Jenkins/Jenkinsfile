@@ -77,7 +77,7 @@ pipeline {
                                 echo 'Record code style and quality issues'
 
                                 def refBuild = selectRun job: INTEGRATION_REFERENCE_JOB_NAME,
-                                        selector: status('SUCCESSFUL'),
+                                        selector: status('STABLE'),
                                         filter: parameters('contract_tests_only=false'), verbose: true
                                 def refBuildId = refBuild.getId()
 
