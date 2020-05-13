@@ -108,8 +108,7 @@ checkstyleTest {
 }
 
 jacoco {
-    toolVersion = "0.8.1"
-    reportsDir = file("$buildDir/customJacocoReportDir")
+    toolVersion = "0.8.5"
 }
 
 jacocoTestReport {
