@@ -4,7 +4,7 @@ pipeline {
     parameters {
         booleanParam(name: 'contract_tests_only', defaultValue: false, description: 'Only Contract Tests')
         choice(name: 'build_status', choices: ['DEFAULT', 'SUCCESS', 'UNSTABLE', 'FAILURE'],
-                defaultValue: 'DEFAULT', description: 'Force build status')
+                description: 'Force build status')
     }
 
     environment {
