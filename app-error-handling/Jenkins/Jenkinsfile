@@ -73,13 +73,13 @@ pipeline {
                 always {
                     dir("${WORKSPACE_PATH}") {
                         script {
+                            def refBuild = selectRun job: INTEGRATION_REFERENCE_JOB_NAME,
+                                    selector: status('STABLE'),
+                                    filter: parameters('contract_tests_only=false'), verbose: true
+                            def refBuildId = refBuild.getId()
+
                             if (params.record_issues) {
                                 echo 'Record code style and quality issues'
-
-                                def refBuild = selectRun job: INTEGRATION_REFERENCE_JOB_NAME,
-                                        selector: status('STABLE'),
-                                        filter: parameters('contract_tests_only=false'), verbose: true
-                                def refBuildId = refBuild.getId()
 
                                 recordIssues(
                                         enabledForFailure: true,
@@ -117,6 +117,10 @@ pipeline {
                                 )
                                 archive 'build/jacoco/**/*.xml'
                                 junit 'build/test-results/**/*.xml'
+                            } else {
+                                echo 'Publish code style and quality issues'
+
+                                publishIssues issues: []
                             }
 
                             if (params.build_status != 'DEFAULT') {
