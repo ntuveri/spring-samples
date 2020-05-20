@@ -78,7 +78,7 @@ pipeline {
                                     filter: parameters('contract_tests_only=false'), verbose: true
                             def refBuildId = refBuild.getId()
 
-                            if (params.record_issues) {
+                            if (!params.contract_tests_only) {
                                 echo 'Record code style and quality issues'
 
                                 recordIssues(
