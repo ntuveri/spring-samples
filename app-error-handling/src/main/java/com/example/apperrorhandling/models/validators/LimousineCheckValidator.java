@@ -26,6 +26,10 @@ public class LimousineCheckValidator
             return true;
         }
 
+		if(car.getModel() == null) {
+			return true;
+		}
+
         for (String acceptedBrand : acceptedBrands) {
             if (car.getModel().contains(acceptedBrand)) {
                 return true;

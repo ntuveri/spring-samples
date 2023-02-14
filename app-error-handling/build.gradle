@@ -1,5 +1,5 @@
 plugins {
-	id 'org.springframework.boot' version '2.2.5.RELEASE'
+	id 'org.springframework.boot' version '2.3.9.RELEASE'
 	id 'io.spring.dependency-management' version '1.0.9.RELEASE'
 	id 'java'
 }
@@ -24,6 +24,7 @@ ext {
 
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'org.keycloak:keycloak-spring-boot-starter'
 
     compileOnly 'org.projectlombok:lombok'

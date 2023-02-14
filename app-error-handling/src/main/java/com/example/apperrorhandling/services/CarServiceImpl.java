@@ -94,11 +94,11 @@ public class CarServiceImpl implements CarService {
         LocalDateTime unoEndProductionDate =
                 LocalDateTime.of(1990, 1, 1, 0,0, 0);
 
-        if (car.getModel().contains("Uno") && car.getProductionDate().isAfter(unoEndProductionDate)) {
+		if(results == null) {
+			results = new BeanPropertyBindingResult(car, "car");
+		}
 
-            if(results == null) {
-                results = new BeanPropertyBindingResult(car, "car");
-            }
+		if (car.getModel().contains("Uno") && car.getProductionDate().isAfter(unoEndProductionDate)) {
             Object[] arguments = new Object[] {
                     new Argument("model", car.getModel()),
                     new Argument("productionDate", car.getProductionDate())

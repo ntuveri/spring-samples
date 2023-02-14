@@ -1,5 +1,6 @@
 package com.example.apperrorhandling;
 
+import org.springframework.boot.web.error.ErrorAttributeOptions;
 import org.springframework.boot.web.servlet.error.DefaultErrorAttributes;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
@@ -53,14 +54,16 @@ public class CustomErrorAttributes extends DefaultErrorAttributes {
 
 
 	@Override
-	public Map<String, Object> getErrorAttributes(WebRequest webRequest, boolean includeStackTrace) {
-		Map<String, Object> errorAttributes = super.getErrorAttributes(webRequest, includeStackTrace);
+	public Map<String, Object> getErrorAttributes(WebRequest webRequest, ErrorAttributeOptions options) {
+		Map<String, Object> errorAttributes = super.getErrorAttributes(webRequest, options
+			.including(ErrorAttributeOptions.Include.MESSAGE)
+			.including(ErrorAttributeOptions.Include.BINDING_ERRORS));
 		List<ObjectError> errors = (List<ObjectError>) errorAttributes.get(ERRORS_KEY);
 
-		List<CustomFieldError> customeFieldErrors = getCustomFieldErrors(errors);
+		List<CustomFieldError> customFieldErrors = getCustomFieldErrors(errors);
 		errorAttributes.remove(ERRORS_KEY);
-		if(customeFieldErrors != null && customeFieldErrors.size() > 0) {
-			errorAttributes.put(ERRORS_KEY, customeFieldErrors);
+		if(customFieldErrors != null && customFieldErrors.size() > 0) {
+			errorAttributes.put(ERRORS_KEY, customFieldErrors);
 		}
 
 		String code = getCode(webRequest, errors);

@@ -19,6 +19,10 @@ public class SuvCheckValidator implements Validator {
     @Override
     public void validate(Object target, Errors errors) {
         Car car = (Car) target;
+        if(car.getModel() == null) {
+        	return;
+		}
+
         if (car.getModel().contains("Tiguan") && car.getBodyStyle() != BodyStyle.SUV) {
 
             errors.rejectValue("model", "InvalidSuv",
