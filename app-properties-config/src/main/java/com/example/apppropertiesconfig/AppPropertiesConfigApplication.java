@@ -23,23 +23,22 @@ public class AppPropertiesConfigApplication implements CommandLineRunner {
 		Environment env = applicationContext.getEnvironment();
 
 		String applicationName = env.getProperty("app.name");
-		System.out.println("Application name is: " + applicationName);
+		System.out.println("app.name: " + applicationName);
 
 		String applicationDefaultValue = env.getProperty("app.default");
-		System.out.println("Application default value is: " + applicationDefaultValue);
+		System.out.println("app.default: " + applicationDefaultValue);
 
 		String applicationCompositeGeneric = env.getProperty("app.composite-generic");
-		System.out.println("Application composite generic value is: " + applicationCompositeGeneric);
+		System.out.println("app.composite-generic: " + applicationCompositeGeneric);
 
 		String applicationCompositeSpecific = env.getProperty("app.composite-specific");
-		System.out.println("Application composite specific value is: " + applicationCompositeSpecific);
+		System.out.println("app.composite-specific: " + applicationCompositeSpecific);
 
 		String applicationSelfGeneric = env.getProperty("app.self-generic");
-		System.out.println("Application self generic value is: " + applicationSelfGeneric);
+		System.out.println("app.self-generic: " + applicationSelfGeneric);
 
 		String applicationSelfSpecific = env.getProperty("app.self-specific");
-		System.out.println("Application self specific value is: " + applicationSelfSpecific);
-
+		System.out.println("app.self-specific: " + applicationSelfSpecific);
 
 		// String userDir = System.getProperty("user.dir");
 		// System.out.println("Current directory is: " + userDir);
